@@ -3,6 +3,7 @@ Web server with flask backend and frontend to visualize WAV waveform.
 
 Drag & Drop or upload WAV file into frontend start page, then the waveform is plotted in the same canvas. The values represents the rms (root mean square) of small blocks of samples ins dBFS (fullscale).
 
+[![](https://i.ibb.co/wp89cTQ/1.png)](#)
 ## Requirements
 
 Python 3.6+ and pip
