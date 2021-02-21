@@ -1,38 +1,4 @@
 /**
- * Form submission with ajax
- * Prevent default upload form submission.
- * Receive data on success callback and draw data in canvas.
- */
-$(document).ready(function() {
-    // bind ajax submit to upload form
-    $( '#uploadForm' ).submit( function( e ) {
-        $.ajax( {
-            url: '/upload',
-            type: 'POST',
-            data: new FormData( this ),
-            processData: false,
-            contentType: false,
-            success: function(data){
-                printLog('Successfully uploaded and analyzed.');
-                printLog('Sample rate: ' + data.fs +
-                    ' Hz, RMS framesize: ' + data.framesize);
-                // paint waveform
-                drawCanvas(data.rms, data.t_rms, data.framesize);
-                printLog('Draw data.');
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // print error message to log box
-                const msg = 'Error ' + jqXHR.status + ': ' +
-                    jqXHR.responseText;
-                printLog(msg);
-            }
-        } );
-        // suppress default form submission
-        e.preventDefault();
-    } );
-});
-
-/**
  * Draw audio waveform with canvas.js
  * @param  {[array]}    y           vector of y samples
  * @param  {[array]}    x           vector of x samples
@@ -95,13 +61,4 @@ function drawCanvas(y, x,framesize = null) {
         }
     }
     new Chart(ctx, options)
-}
-
-/**
- * Print message to log textarea
- * @param  {string}   msg   Log Message
- */
-function printLog(msg) {
-    const box = $( '#logBox' );
-    box.val(box.val() + msg + '\n');
 }
