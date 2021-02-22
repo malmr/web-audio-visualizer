@@ -4,7 +4,7 @@
  */
 function printLog(msg) {
 
-    const box = $( '#logBox' );
+    const box = $( '#logbox' );
     box.val(box.val() + msg + '\n');
 
 }

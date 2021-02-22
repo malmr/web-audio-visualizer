@@ -6,7 +6,7 @@
 $(document).ready(function() {
 
     // bind ajax submit to upload form
-    $( '#uploadForm' ).submit( function( e ) {
+    $( '#uploadform' ).submit( function( e ) {
         $.ajax( {
 
             url: '/upload',
