@@ -6,7 +6,7 @@ Listen to '/upload' and returns on successful upload a JSON object.
     rms : list
         Rms values for given framesize in dBFS.
     t_rms : list
-        Time values in s corresponding to dBFS.
+        Time values in s corresponding to dbfs.
     fs : int
         Sample rate of audio file in Hz.
     framesize : int
@@ -45,7 +45,7 @@ def check_ext(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def calc_rms(y, fs, framesize = DEFAULT_FRAMESIZE):
+def calc_rms(y, fs, bitdepth, framesize = DEFAULT_FRAMESIZE):
     """Calculate rms blocks from a vector of audio samples,
     where y is split into frames of size framesize.
 
@@ -55,26 +55,28 @@ def calc_rms(y, fs, framesize = DEFAULT_FRAMESIZE):
         Vector of audio samples.
     fs : int
         Sample rate of audio file.
+    bitdepth: int
+        Bit depth of audio file.
     framesize : int
         Optional: Size of a frame in samples (default value assumed otherwise)
 
     Returns
     -------
     dbfs : list
-        Rms values in dBFS (positive).
+        Rms values in dBFS.
     t_rms : list
-        Time values in s corresponding to dbfs.
+        Time values in s corresponding to dBFS.
 
     """
     # number of frames for given framesize
     n_frames = np.floor(len(y) / framesize)
-    # calc fullscale in bits from input byte size
-    fullscale = 2 ** (y.itemsize * 8) / 2
+    # calc fullscale in bits
+    fullscale = 2 ** bitdepth / 2
     # type conversion from int to float to prevent overflow (squaring)
     y = y.astype(float)
     frames = np.array_split(y, n_frames)
     rms = [np.sqrt(np.mean(frame ** 2)) for frame in frames]
-    t_rms = (np.arange(0, len(rms) - 1) * framesize/fs).tolist()
+    t_rms = (np.arange(0, len(rms)) * framesize/fs).tolist()
     # calc fullscale ratio
     fsratio = np.array(rms) / fullscale ** 2
     # calc dBFS
@@ -83,10 +85,26 @@ def calc_rms(y, fs, framesize = DEFAULT_FRAMESIZE):
 
 
 def analyze_wav(fn):
-    """Open WAV file and analyze"""
+    """Open WAV file and analyze
+
+    Parameters
+    ----------
+    fn : fileobj
+        Uploaded file.
+
+    Returns
+    -------
+    dbfs : list
+        Rms values in dBFS.
+    t_rms : list
+        Time values in s corresponding to dBFS.
+
+    """
     fs, y = wavfile.read(fn)
-    rms, t_rms = calc_rms(y, fs)
-    return rms, t_rms, fs
+    # calc bitdepth from input byte size
+    bitdepth = y.itemsize * 8
+    dbfs, t_rms = calc_rms(y, fs, bitdepth)
+    return dbfs, t_rms, fs
 
 
 # url route registrations
