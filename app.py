@@ -6,7 +6,7 @@ Listen to '/upload' and returns on successful upload a JSON object.
     rms : list
         Rms values for given framesize in dBFS.
     t_rms : list
-        Time values in s corresponding to dbfs.
+        Time values in s corresponding to dBFS.
     fs : int
         Sample rate of audio file in Hz.
     framesize : int
@@ -77,8 +77,8 @@ def calc_rms(y, fs, framesize = DEFAULT_FRAMESIZE):
     t_rms = (np.arange(0, len(rms) - 1) * framesize/fs).tolist()
     # calc fullscale ratio
     fsratio = np.array(rms) / fullscale ** 2
-    # calc dBFS, for better visual representation as positive (!) values
-    dbfs = (-10 * np.log10(fsratio)).tolist()
+    # calc dBFS
+    dbfs = (10 * np.log10(fsratio)).tolist()
     return dbfs, t_rms
 
 
@@ -111,8 +111,8 @@ def upload_file():
     # if file extension is correct, analyze audio
     if check_ext(file.filename):
         f = request.files['file']
-        rms, t_rms, fs = analyze_wav(f)
-        return jsonify(rms=rms, t_rms=t_rms, fs=fs, framesize=DEFAULT_FRAMESIZE)
+        dbfs, t_rms, fs = analyze_wav(f)
+        return jsonify(rms=dbfs, t_rms=t_rms, fs=fs, framesize=DEFAULT_FRAMESIZE)
     else:
         err_msg = ('Wrong file extension! Allowed: ' +
                    ', '.join(ALLOWED_EXTENSIONS))
