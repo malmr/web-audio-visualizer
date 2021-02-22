@@ -42,7 +42,7 @@ function drawCanvas(y, x,framesize = null) {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'dBFS (positive values)'
+                        labelString: 'dBFS'
                     },
 
                     ticks: {
@@ -59,7 +59,7 @@ function drawCanvas(y, x,framesize = null) {
                 callbacks: {
                     label: function(tooltipItem, data) {
                         var label = Math.round(tooltipItem.yLabel * 100) / 100;
-                        label += ' dBFS (positive)'
+                        label += ' dBFS'
                         return label;
                     }
                 }
