@@ -1,5 +1,4 @@
-#canvas
-{
+#canvas {
 	font-weight: bold;
 	text-align: center;
 	padding: 1em 0;
@@ -10,8 +9,7 @@
 	cursor: default;
 }
 
-#canvas.hover
-{
+#canvas.hover {
 	color: #f00;
 	border-color: #f00;
 	border-style: solid;
