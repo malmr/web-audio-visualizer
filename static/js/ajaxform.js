@@ -1,41 +1,39 @@
 /**
  * Form submission with ajax
- * Prevent default upload form submission.
- * Receive data on success callback and triggering data draw in canvas.
+ * Sending AJAX request and upload file. Receive data on success callback
+ * and triggering data draw in canvas. Prevent default form events.
+ *
+ * @param  {[FormData]}    y        form data with file object
  */
-$(document).ready(function() {
+function ajaxform(formData) {
 
-    // bind ajax submit to upload form
-    $( '#uploadform' ).submit( function( e ) {
-        $.ajax( {
+    // sending ajax request
+    $.ajax( {
 
-            url: '/upload',
-            type: 'POST',
-            data: new FormData( this ),
-            processData: false,
-            contentType: false,
-            success: function(data){
+        url: '/upload',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){
 
-                printLog('Successfully uploaded and analyzed.');
-                printLog('Sample rate: ' + data.fs +
-                    ' Hz, RMS framesize: ' + data.framesize);
-                // paint waveform
-                drawCanvas(data.rms, data.t_rms, data.framesize);
-                printLog('Draw data.');
+            // triggering canvas draw
+            printLog('Successfully uploaded and analyzed.');
+            printLog('Sample rate: ' + data.fs +
+                ' Hz, RMS framesize: ' + data.framesize);
+            // paint waveform
+            drawCanvas(data.rms, data.t_rms, data.framesize);
+            printLog('Draw data.');
 
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
 
-                // print error message to log box
-                const msg = 'Error ' + jqXHR.status + ': ' +
-                    jqXHR.responseText;
-                printLog(msg);
+            // print error message to log box
+            const msg = 'Error ' + jqXHR.status + ': ' +
+                jqXHR.responseText;
+            printLog(msg);
 
-            }
+        }
 
-        } );
-
-        // suppress default form submission
-        e.preventDefault();
     } );
-});
+}
