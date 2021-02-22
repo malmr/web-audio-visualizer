@@ -38,6 +38,9 @@ flask run
 ```
 
 
+### Optional: Testing
+
+Install pytest `pip install -U pytest` and run tests with `python -m pytest`.
 
 ### Usage
 
