@@ -4,16 +4,25 @@
  * @param  {[array]}    x           vector of x samples
  * @param  {[int]}      framesize   optional: size of one rms frame
  */
-function drawCanvas(y, x,framesize = null) {
+function drawCanvas(y, x, framesize = null) {
     var canvas = $( '#canvas' );
+    var inverted = [].slice.call(y),
+    min = Math.min.apply(Math, inverted);
+    // round to next 10 (for nice y axis ticks)
+    minRnd = Math.ceil((min + 1)/10) * 10;
+    offset = minRnd - 20; 
+    inverted.forEach(function(val, idx) {
+        inverted[idx] = Math.abs(offset - val);
+    });
     var options = {
         // bundled list for canvas.js options
         type: 'bar',
+
         data: {
             labels: x,
             datasets: [{
                 label: 'RMS with framesize ' + framesize,
-                data: y,
+                data: inverted,
                 pointRadius: 1.1,
                 backgroundColor: 'rgba(101, 129, 165, 0.8)',
                 }]
@@ -46,11 +55,12 @@ function drawCanvas(y, x,framesize = null) {
                     },
 
                     ticks: {
+                        beginAtZero: true,
                         reverse: false,
-
                         // adjust tick format: round up to 2 decimal points
                         callback: function(value, index, values) {
-                            return Math.round(value * 100) / 100;
+                            return value + offset;
+
                         }
                     }
                 }]
@@ -58,7 +68,8 @@ function drawCanvas(y, x,framesize = null) {
             tooltips: {
                 callbacks: {
                     label: function(tooltipItem, data) {
-                        var label = Math.round(tooltipItem.yLabel * 100) / 100;
+                        value = tooltipItem.yLabel + offset;
+                        var label = Math.round(value * 100) / 100;
                         label += ' dBFS'
                         return label;
                     }

@@ -25,7 +25,6 @@ DEFAULT_FRAMESIZE = 128
 # init flask
 app = Flask(__name__)
 
-
 # functions
 def check_ext(filename):
     """Checks if extension of filename is allowed.
@@ -72,6 +71,7 @@ def calc_rms(y, fs, bitdepth, framesize = DEFAULT_FRAMESIZE):
     n_frames = np.floor(len(y) / framesize)
     # calc fullscale in bits
     fullscale = 2 ** bitdepth / 2
+
     # type conversion from int to float to prevent overflow (squaring)
     y = y.astype(float)
     frames = np.array_split(y, n_frames)
@@ -128,10 +128,13 @@ def upload_file():
 
     # if file extension is correct, analyze audio
     if check_ext(file.filename):
-        f = request.files['file']
-        dbfs, t_rms, fs = analyze_wav(f)
+        dbfs, t_rms, fs = analyze_wav(file)
         return jsonify(rms=dbfs, t_rms=t_rms, fs=fs, framesize=DEFAULT_FRAMESIZE)
     else:
         err_msg = ('Wrong file extension! Allowed: ' +
                    ', '.join(ALLOWED_EXTENSIONS))
         return err_msg, 415
+
+
+if __name__ == "__main__":
+    app.run(debug=True, use_debugger=False, use_reloader=False)
