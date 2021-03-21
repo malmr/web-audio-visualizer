@@ -7,6 +7,9 @@
  */
 function ajaxform(formData) {
 
+    fn = formData.get('file').name
+    printLog('Uploading '+ fn + '...')
+
     // sending ajax request
     $.ajax( {
 
