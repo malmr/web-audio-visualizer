@@ -1,7 +1,7 @@
 # Web Audio Visualizer
 Web server with flask backend and frontend to visualize WAV waveform.
 
-Drag & Drop or upload WAV file into frontend start page, then the waveform is plotted in the same canvas. The values represents the rms (root mean square) of small blocks of samples ins dBFS (fullscale).
+Drag & Drop or upload WAV file into frontend start page, then the waveform is plotted in the same canvas. The values represents the RMS (root mean square) of small blocks of samples ins dBFS (fullscale).
 
 [![](https://i.ibb.co/wKd2Y05/2.png)](#)
 ## Requirements
